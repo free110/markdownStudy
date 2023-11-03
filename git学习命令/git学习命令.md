@@ -63,3 +63,14 @@ C描述该ssh连接针对的邮箱账号
 3. git push origin master
 ```
 
+更换仓库地址
+
+```
+1、git remote rm origin（删除远程地址）
+
+2、git remote add origin [url]（‘[]’内为新的git仓库地址，真实写命令时不要带中括号‘[]’）
+
+更直接的
+git remote set-url origin [url]
+```
+
