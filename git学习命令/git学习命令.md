@@ -74,3 +74,9 @@ C描述该ssh连接针对的邮箱账号
 git remote set-url origin [url]
 ```
 
+# 查看远程仓库地址
+
+```
+git remote -v
+```
+
