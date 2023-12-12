@@ -3,4 +3,6 @@
 #### 介绍
 用markdown来记录自己的一些学习资料
 
-在仓库中显示的不是markdown的本身具体资料，可以考虑使用菜鸟编程学习markdown，如果想要看到后面的源码部分，可以考虑下载来看
+仓库中主要是自己平时写的一些项目进行总结，并且还有一些自己的精简版笔记。
+
+瑞吉外卖：https://gitee.com/yongrenzirao110/reggie_take_out.git
