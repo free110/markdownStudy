@@ -1,2 +1,5 @@
-Java基本语法（尚硅谷）---MySQL初级（后面学习完微服务，https://www.bilibili.com/video/BV1iq4y1u7vj/?p=97&vd_source=b902dfd259856453184e8d886e79a9e8   第97集开始学习高级篇）-黑马javaweb-黑马docker（浅学习）-黑马瑞吉外卖练习-jdbc-servelt（浅显看一看）-苍穹外卖（自己写项目，实现全部接口，看没学过的技术栈）-黑马微服务-计划完成学成在线项目（黑马）
-重新学习尚硅谷技术（仔细学习）
+Java基本语法（尚硅谷）---MySQL初级（后面学习完微服务，https://www.bilibili.com/video/BV1iq4y1u7vj/?p=97&vd_source=b902dfd259856453184e8d886e79a9e8   第97集开始学习高级篇）-
+黑马javaweb-黑马docker（浅学习）-黑马瑞吉外卖练习-jdbc-servelt（浅显看一看）-苍穹外卖（自己写项目，实现全部接口，看没学过的技术栈）-黑马微服务-完成学成在线项目（黑马）-juc高并发变成（同时看ruoyi框架）-优化学成在线项目
+
+
+--学习spring高级-- netty
