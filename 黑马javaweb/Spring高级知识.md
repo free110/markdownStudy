@@ -21,7 +21,7 @@
 
 **com.itheima.a01** 包
 
-#### 收获💡
+#### 总结
 
 通过这个示例结合 debug 查看 ApplicationContext 对象的内部结构，学到：
 
@@ -199,13 +199,13 @@ public class TestBeanFactory {
         });
         //这个输出你会发现得不到bean2，就是因为注入依赖的注解没有被解析。并且发现bean其实是懒加载的
 //        System.out.println("第1次" +  beanFactory.getBean(Bean1.class).getBean2());
-        //下面添加的处理器和上面的处理器有什么不同？其实上面的的是BeanFactory后处理器，他们只是作为一个bean在BeanFactory中，还并没有产生联系，下面代码就是要产生联系。
+        //下面添加的处理器和上面的处理器有什么不同？其实上面的的是BeanFactory后处理器，下面他们只是作为一个bean在BeanFactory中，还并没有产生联系，下面代码就是要产生联系。
         //这样解释其实也不一定对，上面是获取的BeanFactoryPostProcessor，这里获取的BeanPostProcessor，一个是给BeanFactory，一个是Bean
         //前面的BeanFactory处理器应该是为了BeanFactory更好的获取bean的定义描述信息，下面的Bean处理器是为了创建bean的实例化时候用的，创建bean的时候更好的之间的关系。
         // Bean 后处理器, 针对 bean 的生命周期的各个阶段提供扩展, 例如 @Autowired @Resource ...
         // 对于存在冲突的注解，比如@Autowired @Resource就是看下面添加的bean处理器的先后顺序，在前面的就优解析，后面的就会跳过
         beanFactory.getBeansOfType(BeanPostProcessor.class).values().stream()
-                //改变了原有的处理器添加顺序，原本是@Autowired优先级高，现在就是让@Resource优先级高
+                //改变了原有的处理器添加顺序，原本是@Autowired优先级高，现在就是让@Resource优先级高。但是对于这两个注解本身谁的优先级高，我是不确定，有的说@Autowired和@Resource是后者比较高。可以自己实验一下。
                 //是怎么改变顺序或者说是怎么比较的呢，是通过获取这些后处理器的order属性来排序的，数字越大优先级越低。
                 //之前没有排序的时候会让@Autowired的AutowiredAnnotationProcessor先addBeanPostProcessor，那么就会优先解析
                 // 但是经过sorted，通过order大小进行排序后，越小越在前面，那么@Resource的CommonAnnotationProcessor就会先addBeanPostProcessor，此时就会让@Resource优先解析
@@ -312,7 +312,7 @@ public class TestBeanFactory {
 
 
 
-#### 收获💡
+#### 总结
 
 * beanFactory 可以通过 registerBeanDefinition 注册一个 bean definition 对象
   * 我们平时使用的配置类、xml、组件扫描等方式都是生成 bean definition 对象注册到 beanFactory 当中
@@ -336,8 +336,6 @@ public class TestBeanFactory {
 ##### 代码参考 
 
 **com.itheima.a02.A02**
-
-#### 收获💡
 
 1. 常见的 ApplicationContext 容器实现
 2. 内嵌容器、DispatcherServlet 的创建方法、作用
@@ -373,7 +371,7 @@ graph LR
 可用 --> 销毁
 ```
 
-创建前后的增强
+创建前后的增强(实例化前后的增强)
 
 * postProcessBeforeInstantiation
   * 这里返回的对象若不为 null 会替换掉原本的 bean，并且仅会走 postProcessAfterInitialization 流程
@@ -399,7 +397,7 @@ graph LR
 * postProcessBeforeDestruction
   * 如 @PreDestroy 
 
-#### 收获💡
+#### 总结
 
 1. Spring bean 生命周期各个阶段
 2. 模板设计模式, 指大流程已经固定好了, 通过接口回调（bean 后处理器）在一些关键点前后提供扩展
@@ -454,7 +452,7 @@ public class TestMethodTemplate {
 
 **com.itheima.a03.TestProcessOrder**
 
-#### 收获💡
+#### 总结
 
 1. 实现了 PriorityOrdered 接口的优先级最高
 2. 实现了 Ordered 接口与加了 @Order 注解的平级, 按数字升序
@@ -577,14 +575,16 @@ public class TestMethodTemplate {
 2. InitializingBean 接口提供了一种【内置】的初始化手段
 3. 对比
    * 内置的注入和初始化不受扩展功能的影响，总会被执行
-   * 而扩展功能受某些情况影响可能会失效
+   * 而扩展功能受某些情况影响可能会失效(这里就是说对于@Autowired注解就有可能会失效，因为他就)
    * 因此 Spring 框架内部的类常用内置注入和初始化
 
 
 
 #### 配置类 @Autowired 失效分析
 
-Java 配置类不包含 BeanFactoryPostProcessor 的情况
+Java 配置类不包含 BeanFactoryPostProcessor 的情况：
+
+下面的图可能不对，主要是对于3.3步的执行顺序，对于其他部分的先后可能没有错，不影响我们理解@Autowired 的失效。但是对于3.3步我实际实验的时候发现，其实在1之前就执行了。应该时黑马讲错了。
 
 ```mermaid
 sequenceDiagram 
@@ -669,7 +669,9 @@ public class MyConfig1 {
 
 Spring 提供了多种初始化手段，除了课堂上讲的 @PostConstruct，@Bean(initMethod) 之外，还可以实现 InitializingBean 接口来进行初始化，如果同一个 bean 用了以上手段声明了 3 个初始化方法，那么它们的执行顺序是
 
-1. @PostConstruct 标注的初始化方法
+
+
+1. @PostConstruct 标注的初始化方法，如果实现了aware接口的，aware接口的初始化会在这之前执行，也就是排在第一位
 2. InitializingBean 接口的初始化方法
 3. @Bean(initMethod) 指定的初始化方法
 
@@ -699,29 +701,33 @@ Spring 提供了多种初始化手段，除了课堂上讲的 @PostConstruct，@
 
 但要注意，如果在 singleton 注入其它 scope 都会有问题，解决方法有
 
+1. 
+
 * @Lazy
-* @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
-* ObjectFactory
+
+* @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)这个加在注入类的上面，比如下面的F上面
+
+  ```
+  @Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
+  @Component
+  public class F2 {
+  }
+  ```
+
+  
+
+* ObjectFactory 也就是这种方式注入，如果想要获取一个F3的时候，调用f3.getObject()
+
+  ```
+   @Autowired
+      private ObjectFactory<F3> f3;
+  ```
+
+  
+
 * ApplicationContext.getBean
 
-
-
-#### 演示1 - request, session, application 作用域
-
-##### 代码参考 
-
-**com.itheima.a08** 包
-
-* 打开不同的浏览器, 刷新 http://localhost:8080/test 即可查看效果
-* 如果 jdk > 8, 运行时请添加 --add-opens java.base/java.lang=ALL-UNNAMED
-
-#### 收获💡
-
-1. 有几种 scope
-2. 在 singleton 中使用其它几种 scope 的方法
-3. 其它 scope 的销毁时机
-   * 可以将通过 server.servlet.session.timeout=30s 观察 session bean 的销毁
-   * ServletContextScope 销毁机制疑似实现有误
+2. 解决方法虽然不同，但理念上殊途同归: 都是推迟其它 scope bean 的获取
 
 
 
@@ -859,22 +865,9 @@ com.itheima.demo.cycle.F@56303b57
 
 
 
-#### 演示2 - 4种解决方法
-
-##### 代码参考 
-
-**com.itheima.a08.sub** 包
+对于jdk>8 的版本，spring想要直接打印一个没有重写tostring方法的类时，需要添加下面的参数，因为8以上已经不允许通过反射调用tostring
 
 * 如果 jdk > 8, 运行时请添加 --add-opens java.base/java.lang=ALL-UNNAMED
-
-#### 收获💡
-
-1. 单例注入其它 scope 的四种解决方法
-   * @Lazy
-   * @Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
-   * ObjectFactory
-   * ApplicationContext
-2. 解决方法虽然不同，但理念上殊途同归: 都是推迟其它 scope bean 的获取
 
 
 
