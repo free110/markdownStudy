@@ -2,4 +2,4 @@ Java基本语法（尚硅谷）---MySQL初级（后面学习完微服务，https
 黑马javaweb-黑马docker（浅学习）-黑马瑞吉外卖练习-jdbc-servelt（浅显看一看）-苍穹外卖（自己写项目，实现全部接口，看没学过的技术栈）-黑马微服务-完成学成在线项目（黑马）-juc高并发变成（同时看ruoyi框架）-优化学成在线项目
 
 
---学习spring高级-细致学习mybatis-- netty - 开发下载的程序
+--学习spring高级-企业级开发实战（https://www.bilibili.com/video/BV1Fi4y1S7ix/?spm_id_from=333.788.recommend_more_video.1&vd_source=b902dfd259856453184e8d886e79a9e8）-细致学习mybatis-- netty - 开发下载的程序 - springsecurity
